@@ -22,6 +22,7 @@
                                 name="title"
                                 th:field="*{title}"
                         />
+                        <p th:if="${#fields.hasErrors('title')}" class="text-danger" th:errors="*{title}"></p>
                     </div>
 
                     <div class="mb-3">
@@ -34,8 +35,8 @@
                                 name="shortDescription"
                                 th:field="*{shortDescription}"
                         >
-
             </textarea>
+                        <p th:if="${#fields.hasErrors('shortDescription')}" class="text-danger" th:errors="*{shortDescription}"></p>
                     </div>
 
                     <div class="mb-3">
@@ -49,6 +50,7 @@
                                 th:field="*{content}"
                         >
             </textarea>
+                        <p th:if="${#fields.hasErrors('content')}" class="text-danger" th:errors="*{content}"></p>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
