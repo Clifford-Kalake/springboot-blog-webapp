@@ -6,10 +6,7 @@ import org.kalakec.blog.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -65,9 +62,38 @@ public class PostController {
             return "admin/edit_post";
         }
         postDto.setId(postId);
-        //postDto.setUrl(getUrl(postDto.getTitle()));
+        postDto.setUrl(getUrl(postDto.getTitle()));
         postService.updatePost(postDto);
         return "redirect:/admin/posts";
+    }
+
+    //handler method to handle delete post request
+    @GetMapping("/admin/posts/{postId}/delete")
+    public String deletePost(@PathVariable("postId") Long postId){
+        postService.deletePost(postId);
+        return "redirect:/admin/posts";
+    }
+
+    @GetMapping("/admin/posts/{postUrl}/view")
+    public String viewPost(@PathVariable("postUrl") String postUrl, Model model) {
+        try {
+            PostDto postDto = postService.findpostByUrl(postUrl);
+            model.addAttribute("post", postDto);
+            return "admin/view_post"; // Make sure this template exists
+        } catch (RuntimeException e) {
+            System.out.println("Post not found with URL: " + postUrl);
+            return "redirect:/admin/posts?error=notfound"; // Redirect to posts page with an error message
+        }
+    }
+
+
+
+    //handler method to handle search post request
+    @GetMapping("/admin/posts/search")
+    public String searchPosts(@RequestParam(value = "query") String query, Model model){
+        List<PostDto> posts = postService.searchPosts(query);
+        model.addAttribute("posts", posts);
+        return "admin/posts";
     }
 
     public static String getUrl(String postTitle){

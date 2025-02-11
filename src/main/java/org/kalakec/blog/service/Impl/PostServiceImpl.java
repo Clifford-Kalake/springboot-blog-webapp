@@ -22,7 +22,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDto> findAllPosts() {
         List<Post> posts = postRepository.findAll();
-        return posts.stream().map(PostMapper::mapToPostDto)
+        System.out.println("Number of posts found: " + posts.size()); // Debugging line
+        return posts.stream()
+                .map(PostMapper::mapToPostDto)
                 .collect(Collectors.toList());
     }
 
@@ -34,13 +36,38 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto findpostById(Long postId) {
-        Post post = postRepository.findById(postId).get();
-        return PostMapper.mapToPostDto(post);
+        return postRepository.findById(postId)
+                .map(PostMapper::mapToPostDto)
+                .orElseThrow(() -> new RuntimeException("Post not found with ID: " + postId));
     }
 
     @Override
     public void updatePost(PostDto postDto) {
         Post post = PostMapper.mapToPost(postDto);
         postRepository.save(post);
+    }
+
+    @Override
+    public void deletePost(Long postId) {
+        if (!postRepository.existsById(postId)) {
+            throw new RuntimeException("Post not found with ID: " + postId);
+        }
+        postRepository.deleteById(postId);
+    }
+
+    @Override
+    public PostDto findpostByUrl(String postUrl) {
+        return postRepository.findByUrl(postUrl)
+                .map(PostMapper::mapToPostDto)
+                .orElseThrow(() -> new RuntimeException("Post not found with URL: " + postUrl));
+    }
+
+
+    @Override
+    public List<PostDto> searchPosts(String query) {
+        List<Post> posts = postRepository.searchPosts(query);
+        return posts.stream()
+                .map(PostMapper::mapToPostDto)
+                .collect(Collectors.toList());
     }
 }
