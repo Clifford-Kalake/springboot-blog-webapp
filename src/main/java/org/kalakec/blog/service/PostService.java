@@ -10,13 +10,13 @@ public interface PostService {
 
     void createPost(PostDto postDto);
 
-    PostDto findpostById(Long postId);
+    PostDto findPostById(Long postId);
 
     void updatePost(PostDto postDto);
 
     void deletePost(Long postId);
 
-    PostDto findpostByUrl(String postUrl);
+    PostDto findPostByUrl(String postUrl);
 
     List<PostDto> searchPosts(String query);
 }

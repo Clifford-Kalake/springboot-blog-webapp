@@ -13,16 +13,17 @@
             <h3>
               <a th:href="@{/post/{postUrl}(postUrl=${post.url})}"
                  th:text="${post.title}">Post Title</a>
-              <div>
-               <strong th:text="${#temporals.format(post.createdOn, 'dd-MM-yyyy')}">Created On</strong>
-              </div>
             </h3>
+            <div>
+              <strong th:text="${#temporals.format(post.createdOn, 'dd-MM-yyyy')}">Created On</strong>
+            </div>
           </div>
           <div class="card-body">
             <span th:utext="${post.shortDescription}">Short Description</span>
             <a th:href="@{/post/{postUrl}(postUrl=${post.url})}">Read More</a>
           </div>
         </div>
+        <br/>
       </div>
     </div>
     <div class="col-md-3">

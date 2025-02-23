@@ -35,7 +35,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto findpostById(Long postId) {
+    public PostDto findPostById(Long postId) {
         return postRepository.findById(postId)
                 .map(PostMapper::mapToPostDto)
                 .orElseThrow(() -> new RuntimeException("Post not found with ID: " + postId));
@@ -56,12 +56,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto findpostByUrl(String postUrl) {
+    public PostDto findPostByUrl(String postUrl) {
         return postRepository.findByUrl(postUrl)
                 .map(PostMapper::mapToPostDto)
                 .orElseThrow(() -> new RuntimeException("Post not found with URL: " + postUrl));
     }
 
+//    public PostDto findPostByUrl(String postUrl){
+//        Post post = postRepository.findByUrl(postUrl).get();
+//        return PostMapper.mapToPostDto(post);
+//    }
 
     @Override
     public List<PostDto> searchPosts(String query) {

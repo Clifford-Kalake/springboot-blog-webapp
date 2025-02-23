@@ -49,7 +49,7 @@ public class PostController {
     //Handler method to handle edit post request
     @GetMapping("/admin/posts/{postId}/edit")
     public String editPostForm(@PathVariable("postId") Long postId, Model model){
-        PostDto postDto = postService.findpostById(postId);
+        PostDto postDto = postService.findPostById(postId);
         model.addAttribute("post", postDto);
         return "admin/edit_post";
     }
@@ -76,14 +76,9 @@ public class PostController {
 
     @GetMapping("/admin/posts/{postUrl}/view")
     public String viewPost(@PathVariable("postUrl") String postUrl, Model model) {
-        try {
-            PostDto postDto = postService.findpostByUrl(postUrl);
-            model.addAttribute("post", postDto);
-            return "admin/view_post"; // Make sure this template exists
-        } catch (RuntimeException e) {
-            System.out.println("Post not found with URL: " + postUrl);
-            return "redirect:/admin/posts?error=notfound"; // Redirect to posts page with an error message
-        }
+        PostDto postDto = postService.findPostByUrl(postUrl);
+        model.addAttribute("post", postDto);
+        return "admin/view_post";
     }
 
 
@@ -98,9 +93,8 @@ public class PostController {
 
     public static String getUrl(String postTitle){
         String title = postTitle.trim().toLowerCase();
-        String url = title.replaceAll("\\s ", "-");
+        String url = title.replaceAll("\\s+", "-");
         url = url.replaceAll("[^a-zA-Z0-9-]", "-");
         return url;
     }
 }
-

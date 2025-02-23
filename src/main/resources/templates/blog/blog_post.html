@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<div th:replace="admin/header :: header"></div>
+<div th:replace="blog/header :: header"></div>
 <body>
-<div th:replace="admin/header :: navbar"></div>
+<div th:replace="blog/header :: navbar"></div>
 <div class="container">
     <div class="row">
-        <div class="col-md-8 offset-md-2">
+        <div class="col-md-9"><
             <h2 th:text="${post.title}">Post Title</h2>
             <hr/>
             <h4 th:text="${post.shortDescription}">Post Short Description</h4>
             <hr/>
-            <div th:utext="${post.content}"></div>
+            <div th:utext="${post.content}"></div>  <!--post from blog controller-->
         </div>
     </div>
+    <div class="col-md-3">
+        <!-- Search bar goes here -->
+    </div>
 </div>
-
-<div th:replace="~{admin/footer :: footer}"></div>
+<div th:replace="blog/footer :: footer"></div>
 </body>
 </html>
