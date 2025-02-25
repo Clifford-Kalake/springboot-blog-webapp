@@ -1,5 +1,6 @@
 package org.kalakec.blog.controller;
 
+import org.kalakec.blog.dto.CommentDto;
 import org.kalakec.blog.dto.PostDto;
 import org.kalakec.blog.service.PostService;
 import org.springframework.stereotype.Controller;
@@ -32,7 +33,9 @@ public class BlogController {
     @GetMapping("/post/{postUrl}")
     private String showPost(@PathVariable("postUrl") String postUrl, Model model){
         PostDto post = postService.findPostByUrl(postUrl);
+        CommentDto commentDto = new CommentDto();
         model.addAttribute("post", post);
+        model.addAttribute("comment", commentDto);
         return "blog/blog_post";
     }
 
