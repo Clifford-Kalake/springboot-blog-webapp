@@ -21,7 +21,13 @@ public class AuthController {
         this.userService = userService;
         this.userRepository = userRepository;
     }
-    //handler method  to handle user registration request
+
+    //handler method to handle login page request
+    @GetMapping("/login")
+    public String loginPage(){
+        return "login";
+    }
+    //handler method to handle user registration request
     @GetMapping("/register")
     public String showRegistrationForm(Model model){
         //this object holds form data
