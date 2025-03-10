@@ -5,6 +5,8 @@ import org.kalakec.blog.dto.CommentDto;
 import org.kalakec.blog.dto.PostDto;
 import org.kalakec.blog.service.CommentService;
 import org.kalakec.blog.service.PostService;
+import org.kalakec.blog.util.ROLE;
+import org.kalakec.blog.util.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +29,13 @@ public class PostController {
     //create handler method, GET request and return model and view
     @GetMapping("/admin/posts")
     public String posts(Model model) {
-        List<PostDto> posts = postService.findAllPosts();
+        String role = SecurityUtils.getRole();
+        List<PostDto> posts = null;
+        if(ROLE.ROLE_ADMIN.name().equals(role)) {
+            posts = postService.findAllPosts();
+        }else {
+            posts = postService.findPostsByUser();
+        }
         model.addAttribute("posts", posts);
         return "admin/posts";
     }
@@ -35,7 +43,13 @@ public class PostController {
     //handler method to handle list comments request
     @GetMapping("/admin/posts/comments")
     public String postComments(@PathVariable("postId") Long postId, Model model){
-        List<CommentDto> comments = commentService.findAllComments();
+        String role = SecurityUtils.getRole();
+        List<CommentDto> comments = null;
+        if(ROLE.ROLE_ADMIN.name().equals(role)) {
+            comments = commentService.findAllComments();
+        }else{
+            comments = commentService.findCommentsByPost();
+        }
         model.addAttribute("comments", comments);
         return "admin/comments";
     }

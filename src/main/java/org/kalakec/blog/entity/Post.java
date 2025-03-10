@@ -17,20 +17,31 @@ import java.util.Set;
 @Entity
 @Table(name = "posts")
 public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String title;
+
     private String url;
+
     @Lob
     @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String content;
+
     private String shortDescription;
+
     @CreationTimestamp
     private LocalDateTime createdOn;
+
     @UpdateTimestamp
     private LocalDateTime updatedOn;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by", nullable = false)
+    private User createdBy;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private Set<Comment> comments = new HashSet<>();

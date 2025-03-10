@@ -2,9 +2,12 @@ package org.kalakec.blog.service.Impl;
 
 import org.kalakec.blog.dto.PostDto;
 import org.kalakec.blog.entity.Post;
+import org.kalakec.blog.entity.User;
 import org.kalakec.blog.mapper.PostMapper;
 import org.kalakec.blog.repository.PostRepository;
+import org.kalakec.blog.repository.UserRepository;
 import org.kalakec.blog.service.PostService;
+import org.kalakec.blog.util.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +18,11 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
 
-    public PostServiceImpl(PostRepository postRepository) {
+    private UserRepository userRepository;
+
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -29,8 +35,22 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<PostDto> findPostsByUser() {
+        String email = SecurityUtils.getCurrentUser().getUsername();
+        User createdBy = userRepository.findByEmail(email);
+        Long userId = createdBy.getId();
+        List<Post> posts = postRepository.findPostByUser(userId);
+        return posts.stream()
+                .map((post) -> PostMapper.mapToPostDto(post))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void createPost(PostDto postDto) {
+        String email = SecurityUtils.getCurrentUser().getUsername();
+        User user = userRepository.findByEmail(email);
         Post post = PostMapper.mapToPost(postDto);
+        post.setCreatedBy(user);
         postRepository.save(post);
     }
 
@@ -43,7 +63,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void updatePost(PostDto postDto) {
+        String email = SecurityUtils.getCurrentUser().getUsername();
+        User createdBy = userRepository.findByEmail(email);
         Post post = PostMapper.mapToPost(postDto);
+        post.setCreatedBy(createdBy);
         postRepository.save(post);
     }
 
